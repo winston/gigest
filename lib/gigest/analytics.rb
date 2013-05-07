@@ -1,5 +1,5 @@
 module Gigest
-  class Report
+  class Analytics
     def initialize(account, api_token=DEFAULT_API_TOKEN)
       @account   = account
       @api_token = api_token

@@ -1,5 +1,5 @@
 require "gigest/version"
 require "base64"
-require "gigest/report"
+require "gigest/analytics"
 require "gigest/github/github_account"
 require "gigest/github/github_repo"
