@@ -1,3 +1,5 @@
+require 'octokit'
+
 class GithubAccount
   def initialize(account, api_token)
     @account   = account
