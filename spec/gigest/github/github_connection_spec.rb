@@ -4,8 +4,8 @@ describe Gigest::GithubConnection do
   let(:connection) { Gigest::GithubConnection.new(access_token: ENV["GIGEST_TEST_GITHUB_TOKEN"]) }
 
 	describe "#initialize" do
-    before do 
-      Octokit::Client.stub(:new) 
+    before do
+      Octokit::Client.stub(:new)
       Gigest::GithubConnection.new(auth_params)
     end
 
@@ -41,7 +41,7 @@ describe Gigest::GithubConnection do
     end
 
   	it "returns an array of Gigest::GithubRepo" do
-			repositories = connection.repositories_for("winston") 	
+			repositories = connection.repositories_for("winston")
 
       Gigest::GithubRepo.should have_received(:new).at_least(20).times
       expect(repositories).to be_kind_of Array
@@ -53,7 +53,7 @@ describe Gigest::GithubConnection do
 
   	context "when Gemfile exists" do
   		let(:full_name) { "winston/google_visualr_app" }
-  		let(:expected) 	{ File.read(File.join(Dir.pwd, "spec", "fixtures", "gemfile_for_google_visualr_app")) }
+  		let(:expected) 	{ File.read(File.join(Dir.pwd, "spec", "fixtures", "Gemfile")) }
 
 	  	it "returns the Gemfile contents" do
 			 expect(connection.gemfile_for(repository)).to eq expected
