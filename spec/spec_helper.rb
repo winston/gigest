@@ -41,3 +41,11 @@ VCR.configure do |config|
     :record                     => ENV['TRAVIS'] ? :none : :once
   }
 end
+
+# Debug Octokit
+# stack = Faraday::Builder.new do |builder|
+#   builder.response :logger
+#   builder.use Octokit::Response::RaiseError
+#   builder.adapter Faraday.default_adapter
+# end
+# Octokit.middleware = stack
