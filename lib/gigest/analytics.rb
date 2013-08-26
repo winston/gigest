@@ -1,11 +1,21 @@
 module Gigest
   class Analytics
-    def initialize(account, api_token=DEFAULT_API_TOKEN)
-      @account   = account
-      @api_token = api_token
 
-      @gems = {}
+    def initialize(auth_params={})
+      @connection = GithubConnection.new(auth_params)      
+    end  
+
+    def process_for(account)
+      raise "Gigest::Analytics#process_for requires an account name!" if account.nil?
     end
+
+
+    # def initialize(account, api_token=DEFAULT_API_TOKEN)
+    #   @account   = account
+    #   @api_token = api_token
+
+    #   @gems = {}
+    # end
 
     def run
       @github_account = GithubAccount.new(@account, @api_token)

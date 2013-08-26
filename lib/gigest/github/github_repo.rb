@@ -1,24 +1,14 @@
-class GithubRepo
-  def initialize(connection, repository)
-    @connection = connection
-    @repository = repository
-  end
+module Gigest
+  class GithubRepo
+    attr_reader :gemfile
 
-  def name
-    @repository.full_name
-  end
+    def initialize(repository, gemfile)
+      @repository = repository
+      @gemfile    = gemfile
+    end
 
-  def file_blob(file)
-    @connection.contents(name, path: file).content
-  end
-
-  def gemfile
-    decode(file_blob("Gemfile"))
-  end
-
-  private
-
-  def decode(blob)
-    Base64.decode64(blob)
+    def name
+      @repository.full_name
+    end
   end
 end

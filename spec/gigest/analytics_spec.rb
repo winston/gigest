@@ -1,41 +1,27 @@
 require 'spec_helper'
 
 describe Gigest::Analytics do
-  context "authentication" do
-    context "with username and password" do
-      subject(:analytics) { Gigest::Analytics.new() }
+  context "#initialize" do
+    let(:auth_params) { {login: "username", password: "password"} }
 
-      it "passes params to Ockokit" do
-      end
-    end
-
-    context "with oauth" do
-      subject(:analytics) { Gigest::Analytics.new() }
-
-      it "passes params to Ockokit" do
-      end
-    end
-
-    context "with .netrc" do
-      subject(:analytics) { Gigest::Analytics.new() }
-
-      it "passes params to Ockokit" do
-      end
-    end
-
-    context "with application" do
-      subject(:analytics) { Gigest::Analytics.new() }
-
-      it "passes params to Ockokit" do
-      end
+    it "instantiates a connection" do
+      Gigest::GithubConnection.stub(:new)
+      Gigest::Analytics.new(auth_params)
+      Gigest::GithubConnection.should have_received(:new).with(auth_params)
     end
   end
 
   describe "#process_for" do
-    subject(:analytics) { Gigest::Analytics.new() }
+    subject(:analytics) { Gigest::Analytics.new(access_token: ENV["GIGEST_TEST_GITHUB_TOKEN"]) }
+
+    context "without an account" do
+      it "raises an exception" do
+        expect { analytics.process_for(nil) }.to raise_error
+      end
+    end
 
     it "returns a summary" do
-      analytics.process_for("account_name")
+      analytics.process_for("neo")
     end
   end
 
