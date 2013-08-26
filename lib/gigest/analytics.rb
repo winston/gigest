@@ -7,7 +7,7 @@ module Gigest
     end
 
     def process_for(account=nil, type=:user)
-      @repositories              = @connection.repositories_for(account)
+      @repositories              = @connection.repositories_for(account, type)
       @repositories_with_gemfile = @repositories.select(&:has_gemfile?)
     end
 
