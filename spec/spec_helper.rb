@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'bundler/setup'
+require 'vcr'
 
 require "gigest"
 
@@ -19,4 +20,24 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = 'random'
+
+  # https://relishapp.com/vcr/vcr/v/2-5-0/docs/test-frameworks/usage-with-rspec-metadata
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+end
+
+VCR.configure do |config|
+  config.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
+  config.hook_into :webmock # or :fakeweb
+
+  # Referenced from https://github.com/octokit/octokit.rb/blob/master/spec/helper.rb
+  config.configure_rspec_metadata!
+  config.filter_sensitive_data("<<ACCESS_TOKEN>>") do
+      ENV['GIGEST_TEST_GITHUB_TOKEN']
+  end
+  config.default_cassette_options = {
+    :serialize_with             => :json,
+    :preserve_exact_body_bytes  => true,
+    :decode_compressed_response => true,
+    :record                     => ENV['TRAVIS'] ? :none : :once
+  }
 end
