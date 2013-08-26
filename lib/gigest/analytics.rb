@@ -6,7 +6,7 @@ module Gigest
       @connection = GithubConnection.new(auth_params)
     end
 
-    def process_for(account=nil)
+    def process_for(account=nil, type=:user)
       @repositories              = @connection.repositories_for(account)
       @repositories_with_gemfile = @repositories.select(&:has_gemfile?)
     end

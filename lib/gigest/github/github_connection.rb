@@ -4,26 +4,38 @@ module Gigest
       @connection = Octokit::Client.new(auth_params)
     end
 
-    def repositories_for(account=nil)
-      @connection.repositories(account).map do |repository|
-        GithubRepo.new(repository, gemfile_for(repository))
+    def repositories_for(account=nil, type=:user)
+      all_repositories  = []
+
+      page = 0
+      loop do
+        repositories = @connection.send(repository_method(type), account, page: page+=1)
+        break if repositories.empty?
+
+        all_repositories += repositories.map { |repository| GithubRepo.new(repository, gemfile_for(repository.full_name)) }
       end
+
+      all_repositories
     end
 
-    def gemfile_for(repository)
-      decode(file_blob(repository, "Gemfile"))
+    def gemfile_for(repository_name)
+      decode(file_blob(repository_name, "Gemfile"))
     rescue Octokit::NotFound
       nil
     end
 
     private
 
+    def repository_method(type)
+      type == :user ? :repositories : :organization_repositories
+    end
+
     def decode(blob)
       Base64.decode64(blob)
     end
 
-    def file_blob(repository, file)
-      @connection.contents(repository.full_name, path: file).content
+    def file_blob(repository_name, file)
+      @connection.contents(repository_name, path: file).content
     end
   end
 end

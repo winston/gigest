@@ -34,37 +34,51 @@ describe Gigest::GithubConnection do
     end
   end
 
-  describe "#repositories", :vcr do
-    before do
-      Gigest::GithubRepo.stub(:new)
-      Gigest::GithubConnection.stub(:gemfile_for) { nil }
+  describe "#repositories_for", :vcr do
+    context "default" do
+      before { connection.stub(:gemfile_for) { nil } }
+
+      it "returns an array of Gigest::GithubRepo" do
+        Gigest::GithubRepo.stub(:new)
+        expect(connection.repositories_for("neo")).to be_kind_of Array
+        Gigest::GithubRepo.should have_received(:new).at_least(40).times
+      end
     end
 
-  	it "returns an array of Gigest::GithubRepo" do
-			repositories = connection.repositories_for("winston")
+    context "when account type is specified" do
+      let(:octokit_client) { double(:octokit_client) }
 
-      Gigest::GithubRepo.should have_received(:new).at_least(20).times
-      expect(repositories).to be_kind_of Array
-  	end
+      before { Octokit::Client.stub(:new) { octokit_client } }
+
+      it "retrieves repositories for user" do
+        octokit_client.stub(:repositories) { [] }
+        connection.repositories_for("winston", :user)
+        octokit_client.should have_received(:repositories).with("winston", anything)
+      end
+
+      it "retrieves repositories for org" do
+        octokit_client.stub(:organization_repositories) { [] }
+        connection.repositories_for("google!", :org)
+        octokit_client.should have_received(:organization_repositories).with("google!", anything)
+      end
+    end
   end
 
   describe "#gemfile_for", :vcr do
-  	let(:repository) { double(:repository, full_name: full_name)}
-
   	context "when Gemfile exists" do
-  		let(:full_name) { "winston/google_visualr_app" }
-  		let(:expected) 	{ File.read(File.join(Dir.pwd, "spec", "fixtures", "Gemfile")) }
+  		let(:repository_name) { "winston/google_visualr_app" }
+  		let(:expected) 	      { File.read(File.join(Dir.pwd, "spec", "fixtures", "Gemfile")) }
 
 	  	it "returns the Gemfile contents" do
-			 expect(connection.gemfile_for(repository)).to eq expected
+			 expect(connection.gemfile_for(repository_name)).to eq expected
 	  	end
   	end
 
   	context "when Gemfile does not exist" do
-			let(:full_name) { "winston/dotfiles" }
+			let(:repository_name) { "winston/dotfiles" }
 
 	  	it "returns nil" do
-				expect(connection.gemfile_for(repository)).to be_nil
+				expect(connection.gemfile_for(repository_name)).to be_nil
 	  	end
   	end
   end
