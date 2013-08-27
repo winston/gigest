@@ -1,6 +1,6 @@
 # GIGEST
 
-**GI**tHub**GE**m**ST**ats. Discover Gems usage for a GitHub user or org!
+**GI**tHub **GE**m **ST**ats. Discover Gems usage for a GitHub user or org!
 
 Do you want to know which are the most frequently used Gems in a GitHub account?
 GIGEST gives you the ability to do that by inspecting the Gemfiles across all repos for a GitHub user or org.
