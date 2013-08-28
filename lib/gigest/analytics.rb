@@ -24,22 +24,32 @@ module Gigest
           summary[gem] ||= []
           summary[gem] << repository.name unless summary[gem].include?(repository.name)
         end
-
         summary
       end
     end
 
     # Returns statistic (sorted desc)
+    # Assuming GitHub user/org only has repo1 and repo2
     # [
-    #   [gem1, 2],
-    #   [gem2, 1]
+    #   {gem_name: gem1, repositories: ["repo1", "repo2"], count: 2, percentage: 100.0},
+    #   {gem_name: gem2, repositories: ["repo1"], count: 1, percentage: 50.0}
     # ]
     def statistics
-      summary.inject({}) do |summary, (gem, repos)|
-        summary[gem] = repos.count
-        summary
+      summary.map do |gem_name, repositories|
+        {
+          gem_name: gem_name,
+          repositories: repositories,
+          count: repositories.count,
+          percentage: percentage(repositories.count, @repositories_with_gemfile.count)
+        }
       end
-      .sort_by { |gem, count| count }.reverse
+      .sort_by { |statistic| statistic[:count] }.reverse
+    end
+
+    private
+
+    def percentage(numerator, denominator)
+      (numerator.to_f / denominator.to_f * 100).round(2)
     end
   end
 end

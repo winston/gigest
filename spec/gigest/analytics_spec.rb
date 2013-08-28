@@ -35,7 +35,7 @@ describe Gigest::Analytics do
   end
 
   describe "#summary", :vcr do
-    let(:expected)  { JSON.parse File.read(File.join(Dir.pwd, "spec", "fixtures", "summary.json")) }
+    let(:expected) { JSON.parse File.read(File.join(Dir.pwd, "spec", "fixtures", "summary.json")) }
 
     context "when repositories exist" do
       before { analytics.process_for("winston") }
@@ -53,7 +53,12 @@ describe Gigest::Analytics do
   end
 
   describe "#statistics", :vcr do
-    let(:expected)  { JSON.parse File.read(File.join(Dir.pwd, "spec", "fixtures", "statistics.json")) }
+    let(:expected) do
+      contents = JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "statistics.json")))
+      contents.map do |row|
+        row.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
+      end
+    end
 
     context "when repositories exist" do
       before { analytics.process_for("winston") }
