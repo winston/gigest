@@ -1,12 +1,13 @@
 module Gigest
   class Analytics
-    attr_reader :repositories, :repositories_with_gemfile
+    attr_reader :account_details, :repositories, :repositories_with_gemfile
 
     def initialize(auth_params={})
       @connection = GithubConnection.new(auth_params)
     end
 
     def process_for(account=nil, type=:user)
+      @account_details           = @connection.details_for(account, type)
       @repositories              = @connection.repositories_for(account, type)
       @repositories_with_gemfile = @repositories.select(&:has_gemfile?)
     end

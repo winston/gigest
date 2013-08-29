@@ -14,22 +14,28 @@ describe Gigest::Analytics do
   end
 
   describe "#process_for" do
-    let(:repo1) { double(:repo1, has_gemfile?: true)  }
-    let(:repo2) { double(:repo2, has_gemfile?: false) }
-
+    let(:account_details)           { {name: "naruto", company: "konoha"} }
     let(:repositories)              { [repo1, repo2] }
     let(:repositories_with_gemfile) { [repo1] }
 
+    let(:repo1) { double(:repo1, has_gemfile?: true)  }
+    let(:repo2) { double(:repo2, has_gemfile?: false) }
+
     before do
+      Gigest::GithubConnection.any_instance.stub(:details_for).with(anything, anything) { account_details }
       Gigest::GithubConnection.any_instance.stub(:repositories_for).with(anything, anything) { repositories }
       analytics.process_for("somebody")
     end
 
-    it "returns repositories" do
+    it "inits account_details" do
+      expect(analytics.account_details).to eq(account_details)
+    end
+
+    it "inits repositories" do
       expect(analytics.repositories).to eq(repositories)
     end
 
-    it "returns repositories with gemfile" do
+    it "inits repositories with gemfile" do
       expect(analytics.repositories_with_gemfile).to eq(repositories_with_gemfile)
     end
   end

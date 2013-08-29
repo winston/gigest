@@ -4,6 +4,10 @@ module Gigest
       @connection = Octokit::Client.new(auth_params)
     end
 
+    def details_for(account=nil, type=:user)
+      @connection.send(account_method(type), account)
+    end
+
     def repositories_for(account=nil, type=:user)
       all_repositories  = []
 
@@ -25,6 +29,10 @@ module Gigest
     end
 
     private
+
+    def account_method(type)
+      type == :org ? :organization : :user
+    end
 
     def repository_method(type)
       type == :org ? :organization_repositories : :repositories

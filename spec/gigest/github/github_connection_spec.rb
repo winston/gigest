@@ -34,6 +34,28 @@ describe Gigest::GithubConnection do
     end
   end
 
+  describe "#details_for" do
+    let(:octokit_client) { double(:octokit_client) }
+
+    before { Octokit::Client.stub(:new) { octokit_client } }
+
+    context "when account type is user" do
+      it "retrieves user details" do
+        octokit_client.stub(:user)
+        connection.details_for("winston", :user)
+        expect(octokit_client).to have_received(:user).with("winston")
+      end
+    end
+
+    context "when account type is org" do
+      it "retrieves org details" do
+        octokit_client.stub(:organization)
+        connection.details_for("neo"    , :org)
+        expect(octokit_client).to have_received(:organization).with("neo")
+      end
+    end
+  end
+
   describe "#repositories_for", :vcr do
     context "default" do
       before { connection.stub(:gemfile_for) { nil } }
@@ -53,13 +75,13 @@ describe Gigest::GithubConnection do
       it "retrieves repositories for user" do
         octokit_client.stub(:repositories) { [] }
         connection.repositories_for("winston", :user)
-        octokit_client.should have_received(:repositories).with("winston", anything)
+        expect(octokit_client).to have_received(:repositories).with("winston", anything)
       end
 
       it "retrieves repositories for org" do
         octokit_client.stub(:organization_repositories) { [] }
         connection.repositories_for("google!", :org)
-        octokit_client.should have_received(:organization_repositories).with("google!", anything)
+        expect(octokit_client).to have_received(:organization_repositories).with("google!", anything)
       end
     end
   end
