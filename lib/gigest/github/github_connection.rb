@@ -27,7 +27,7 @@ module Gigest
     private
 
     def repository_method(type)
-      type == :user ? :repositories : :organization_repositories
+      type == :org ? :organization_repositories : :repositories
     end
 
     def decode(blob)

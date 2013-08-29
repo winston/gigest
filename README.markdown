@@ -28,6 +28,8 @@ which the OAuth access token was granted](http://developer.github.com/v3/oauth/#
 
 This can take a while if the GitHub account contains A LOT of repos. Sit back and relax.
 
+The default is to process for a _User_ type GitHub account, otherwise invoke `process_for("neo", :org)`.
+
 3) Get summary.
 
     analytics.summary
@@ -43,12 +45,12 @@ Returns you a Hash in the format:
 
     analytics.statistics
 
-Returns you a Hash in the format:
+Returns you an Array in the format:
 
-    {
-      gem1: 2, # number of times seen
-      gem2: 4
-    }
+    [
+      {gem_name: "gem1", repositories: ["repo1", "repo2"], count: 2, percentage: 100.0},
+      {gem_name: "gem2", repositories: ["repo1"], count: 1, percentage: 50.0}
+    ]
 
 
 ## Contributing
