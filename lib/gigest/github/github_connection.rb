@@ -5,7 +5,15 @@ module Gigest
     end
 
     def details_for(account=nil, type=:user)
-      @connection.send(account_method(type), account)
+      details = @connection.send(account_method(type), account)
+
+      {
+        name: details[:name],
+        avatar_url: details._rels[:avatar].href,
+        company: details[:company],
+        location: details[:location],
+        html_url: details._rels[:html].href
+      }
     end
 
     def repositories_for(account=nil, type=:user)

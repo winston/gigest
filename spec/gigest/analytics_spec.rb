@@ -17,7 +17,6 @@ describe Gigest::Analytics do
     let(:account_details)           { {name: "naruto", company: "konoha"} }
     let(:repositories)              { [repo1, repo2] }
     let(:repositories_with_gemfile) { [repo1] }
-
     let(:repo1) { double(:repo1, has_gemfile?: true)  }
     let(:repo2) { double(:repo2, has_gemfile?: false) }
 
@@ -41,7 +40,7 @@ describe Gigest::Analytics do
   end
 
   describe "#summary", :vcr do
-    let(:expected) { JSON.parse File.read(File.join(Dir.pwd, "spec", "fixtures", "summary.json")) }
+    let(:expected) { JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "summary.json"))) }
 
     context "when repositories exist" do
       before { analytics.process_for("winston") }
@@ -61,9 +60,8 @@ describe Gigest::Analytics do
   describe "#statistics", :vcr do
     let(:expected) do
       contents = JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "statistics.json")))
-      contents.map do |row|
-        row.inject({}){|memo,(k,v)| memo[k.to_sym] = v; memo}
-      end
+      # stringify keys
+      contents.map { |row| row.inject({}) { |memo,(k,v)| memo[k.to_sym] = v; memo } }
     end
 
     context "when repositories exist" do

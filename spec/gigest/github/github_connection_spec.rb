@@ -34,22 +34,30 @@ describe Gigest::GithubConnection do
     end
   end
 
-  describe "#details_for" do
-    let(:octokit_client) { double(:octokit_client) }
+  describe "#details_for", :vcr do
+    let(:expected) do
+      contents = JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "account.json")))
+      # stringify keys
+      contents.inject({}) { |memo,(k,v)| memo[k.to_sym] = v; memo }
+    end
 
-    before { Octokit::Client.stub(:new) { octokit_client } }
+    it "returns account details" do
+      expect(connection.details_for("winston")).to eq(expected)
+    end
 
-    context "when account type is user" do
+    context "when account type is specified" do
+      let(:octokit_client) { double(:octokit_client) }
+
+      before { Octokit::Client.stub(:new) { octokit_client } }
+
       it "retrieves user details" do
-        octokit_client.stub(:user)
+        octokit_client.stub(:user) { double(:account).as_null_object }
         connection.details_for("winston", :user)
         expect(octokit_client).to have_received(:user).with("winston")
       end
-    end
 
-    context "when account type is org" do
       it "retrieves org details" do
-        octokit_client.stub(:organization)
+        octokit_client.stub(:organization) { double(:account).as_null_object }
         connection.details_for("neo"    , :org)
         expect(octokit_client).to have_received(:organization).with("neo")
       end
