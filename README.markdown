@@ -1,6 +1,6 @@
 # GIGEST
 
-**GI**tHub **GE**m **ST**ats. Discover Gems usage for a GitHub user or org!
+**GI**tHub **GE**ms **ST**ats. Discover Gems usage for a GitHub user or org!
 
 Do you want to know which are the most/least frequently used Gems for a GitHub user or organization?
 GIGEST gives you the ability to do that by inspecting the Gemfiles across all repos for a GitHub account.
@@ -19,16 +19,13 @@ GIGEST gives you the ability to do that by inspecting the Gemfiles across all re
 
 Authenticating with your username and password will give GIGEST access to public and private repos within your GitHub account and organization/s.
 
-Authenticating with an OAuth access token will give GIGEST access to repos depending on the [scopes
-which the OAuth access token was granted](http://developer.github.com/v3/oauth/#scopes).
+Authenticating with an OAuth access token will give GIGEST access to repos depending on the [scopes which the OAuth access token was granted](http://developer.github.com/v3/oauth/#scopes).
 
 2) Process for a GitHub user or GitHub Organization.
 
     analytics.process_for("winston")
 
 This can take a while if the GitHub account contains A LOT of repos. Sit back and relax.
-
-The default is to process for a _User_ type GitHub account, otherwise invoke `process_for("neo", :org)`.
 
 3) Get summary.
 

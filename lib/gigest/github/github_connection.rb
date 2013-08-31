@@ -4,11 +4,12 @@ module Gigest
       @connection = Octokit::Client.new(auth_params)
     end
 
-    def details_for(account=nil, type=:user)
-      details = @connection.send(account_method(type), account)
+    def details_for(account=nil)
+      details = @connection.user(account)
 
       {
         name: details[:name],
+        type: details[:type],
         avatar_url: details._rels[:avatar].href,
         company: details[:company],
         location: details[:location],
@@ -16,12 +17,12 @@ module Gigest
       }
     end
 
-    def repositories_for(account=nil, type=:user)
+    def repositories_for(account=nil)
       all_repositories  = []
 
       page = 0
       loop do
-        repositories = @connection.send(repository_method(type), account, page: page+=1)
+        repositories = @connection.repositories(account, page: page+=1)
         break if repositories.empty?
 
         all_repositories += repositories.map { |repository| GithubRepo.new(repository, gemfile_for(repository.full_name)) }
@@ -37,14 +38,6 @@ module Gigest
     end
 
     private
-
-    def account_method(type)
-      type == :org ? :organization : :user
-    end
-
-    def repository_method(type)
-      type == :org ? :organization_repositories : :repositories
-    end
 
     def decode(blob)
       Base64.decode64(blob)

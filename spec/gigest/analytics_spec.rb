@@ -21,8 +21,8 @@ describe Gigest::Analytics do
     let(:repo2) { double(:repo2, has_gemfile?: false) }
 
     before do
-      Gigest::GithubConnection.any_instance.stub(:details_for).with(anything, anything) { account_details }
-      Gigest::GithubConnection.any_instance.stub(:repositories_for).with(anything, anything) { repositories }
+      Gigest::GithubConnection.any_instance.stub(:details_for)      { account_details }
+      Gigest::GithubConnection.any_instance.stub(:repositories_for) { repositories }
       analytics.process_for("somebody")
     end
 

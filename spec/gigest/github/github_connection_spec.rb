@@ -36,60 +36,38 @@ describe Gigest::GithubConnection do
 
   describe "#details_for", :vcr do
     let(:expected) do
-      contents = JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "account.json")))
+      contents = JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", file)))
       # stringify keys
       contents.inject({}) { |memo,(k,v)| memo[k.to_sym] = v; memo }
     end
 
-    it "returns account details" do
-      expect(connection.details_for("winston")).to eq(expected)
+    context "user" do
+      let(:file) { "github_user.json" }
+      it { expect(connection.details_for("winston")).to eq(expected) }
     end
 
-    context "when account type is specified" do
-      let(:octokit_client) { double(:octokit_client) }
-
-      before { Octokit::Client.stub(:new) { octokit_client } }
-
-      it "retrieves user details" do
-        octokit_client.stub(:user) { double(:account).as_null_object }
-        connection.details_for("winston", :user)
-        expect(octokit_client).to have_received(:user).with("winston")
-      end
-
-      it "retrieves org details" do
-        octokit_client.stub(:organization) { double(:account).as_null_object }
-        connection.details_for("neo"    , :org)
-        expect(octokit_client).to have_received(:organization).with("neo")
-      end
+    context "organization" do
+      let(:file) { "github_organization.json" }
+      it { expect(connection.details_for("neo")).to eq(expected) }
     end
   end
 
   describe "#repositories_for", :vcr do
-    context "default" do
-      before { connection.stub(:gemfile_for) { nil } }
+    before { connection.stub(:gemfile_for) { nil } }
 
+    context "user" do
+      it "returns an array of Gigest::GithubRepo" do
+        Gigest::GithubRepo.stub(:new)
+        expect(connection.repositories_for("winston")).to be_kind_of Array
+        Gigest::GithubRepo.should have_received(:new).at_least(20).times
+      end
+    end
+
+    context "organization" do
       it "returns an array of Gigest::GithubRepo" do
         Gigest::GithubRepo.stub(:new)
         expect(connection.repositories_for("neo")).to be_kind_of Array
         Gigest::GithubRepo.should have_received(:new).at_least(40).times
-      end
-    end
-
-    context "when account type is specified" do
-      let(:octokit_client) { double(:octokit_client) }
-
-      before { Octokit::Client.stub(:new) { octokit_client } }
-
-      it "retrieves repositories for user" do
-        octokit_client.stub(:repositories) { [] }
-        connection.repositories_for("winston", :user)
-        expect(octokit_client).to have_received(:repositories).with("winston", anything)
-      end
-
-      it "retrieves repositories for org" do
-        octokit_client.stub(:organization_repositories) { [] }
-        connection.repositories_for("google!", :org)
-        expect(octokit_client).to have_received(:organization_repositories).with("google!", anything)
       end
     end
   end
