@@ -13,6 +13,14 @@ describe Gigest::Analytics do
     end
   end
 
+  describe "#analyzable?" do
+    it "delegates to connection" do
+      Gigest::GithubConnection.any_instance.should_receive(:exists?).with("winston")
+
+      analytics.analyzable?("winston")
+    end
+  end
+
   describe "#process_for" do
     let(:account_details)           { {name: "naruto", company: "konoha"} }
     let(:repositories)              { [repo1, repo2] }

@@ -4,7 +4,13 @@ module Gigest
       @connection = Octokit::Client.new(auth_params)
     end
 
-    def details_for(account=nil)
+    def exists?(account)
+      @connection.user(account) ? true : false
+    rescue Octokit::NotFound
+      false
+    end
+
+    def details_for(account)
       details = @connection.user(account)
 
       {
@@ -17,7 +23,7 @@ module Gigest
       }
     end
 
-    def repositories_for(account=nil)
+    def repositories_for(account)
       all_repositories  = []
 
       page = 0

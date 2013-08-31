@@ -34,6 +34,20 @@ describe Gigest::GithubConnection do
     end
   end
 
+  describe "#exists?", :vcr do
+    context "valid GitHub account" do
+      it "returns true" do
+        expect(connection.exists?("winston")).to be_true
+      end
+    end
+
+    context "invalid GitHUb account" do
+      it "returns false" do
+        expect(connection.exists?("thisisaverylongloginnamethatdontexist")).to be_false
+      end
+    end
+  end
+
   describe "#details_for", :vcr do
     let(:expected) do
       contents = JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", file)))
