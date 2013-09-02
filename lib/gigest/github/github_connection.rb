@@ -39,7 +39,7 @@ module Gigest
 
     def gemfile_for(repository_name)
       decode(file_blob(repository_name, "Gemfile"))
-    rescue Octokit::NotFound
+    rescue Octokit::NotFound, StandardError
       nil
     end
 
