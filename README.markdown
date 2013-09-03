@@ -1,5 +1,7 @@
 # GIGEST
 
+[![Build Status](https://travis-ci.org/winston/gigest.png?branch=master)](https://travis-ci.org/winston/gigest)
+
 **GI**tHub **GE**ms **ST**ats. Discover Gems usage for a GitHub user or org!
 
 Do you want to know which are the most/least frequently used Gems for a GitHub user or organization?
