@@ -22,6 +22,9 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "octokit", "~> 2.0"
 
+  # Add Rake dependency for Travis..
+  gem.add_development_dependency "rake"
+
   gem.add_development_dependency "rspec"
   gem.add_development_dependency "vcr"
   gem.add_development_dependency "webmock"
