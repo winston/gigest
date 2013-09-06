@@ -1,0 +1,22 @@
+{
+  "bourbon":["winston/cactus_app","winston/soloistrc_builder"],
+  "cactus":["winston/cactus_app"],
+  "capybara":["winston/cactus_app"],
+  "coffee-rails":["winston/cactus_app"],
+  "compass-rails":["winston/google_visualr_app"],
+  "foreman":["winston/soloistrc_builder"],
+  "google_visualr":["winston/google_visualr_app"],
+  "haml":["winston/soloistrc_builder"],
+  "haml-rails":["winston/cactus_app"],
+  "heroku":["winston/google_visualr_app","winston/soloistrc_builder"],
+  "jquery-rails":["winston/cactus_app"],
+  "rails":["winston/cactus_app","winston/google_visualr_app"],
+  "rdiscount":["winston/soloistrc_builder"],
+  "rspec-rails":["winston/cactus_app"],
+  "rspec":["winston/set-interview-ruby"],
+  "sass":["winston/soloistrc_builder"],
+  "sass-rails":["winston/cactus_app","winston/google_visualr_app"],
+  "sinatra":["winston/soloistrc_builder"],
+  "thin":["winston/soloistrc_builder"],
+  "uglifier":["winston/cactus_app","winston/google_visualr_app"]
+}

@@ -1,0 +1,22 @@
+[
+  {"gem_name":"rails","repositories":["winston/cactus_app","winston/google_visualr_app"],"count":2,"percentage":22.22},
+  {"gem_name":"sass-rails","repositories":["winston/cactus_app","winston/google_visualr_app"],"count":2,"percentage":22.22},
+  {"gem_name":"uglifier","repositories":["winston/cactus_app","winston/google_visualr_app"],"count":2,"percentage":22.22},
+  {"gem_name":"bourbon","repositories":["winston/cactus_app","winston/soloistrc_builder"],"count":2,"percentage":22.22},
+  {"gem_name":"heroku","repositories":["winston/google_visualr_app","winston/soloistrc_builder"],"count":2,"percentage":22.22},
+  {"gem_name":"google_visualr","repositories":["winston/google_visualr_app"],"count":1,"percentage":11.11},
+  {"gem_name":"rspec","repositories":["winston/set-interview-ruby"],"count":1,"percentage":11.11},
+  {"gem_name":"sinatra","repositories":["winston/soloistrc_builder"],"count":1,"percentage":11.11},
+  {"gem_name":"compass-rails","repositories":["winston/google_visualr_app"],"count":1,"percentage":11.11},
+  {"gem_name":"thin","repositories":["winston/soloistrc_builder"],"count":1,"percentage":11.11},
+  {"gem_name":"cactus","repositories":["winston/cactus_app"],"count":1,"percentage":11.11},
+  {"gem_name":"capybara","repositories":["winston/cactus_app"],"count":1,"percentage":11.11},
+  {"gem_name":"rspec-rails","repositories":["winston/cactus_app"],"count":1,"percentage":11.11},
+  {"gem_name":"haml","repositories":["winston/soloistrc_builder"],"count":1,"percentage":11.11},
+  {"gem_name":"sass","repositories":["winston/soloistrc_builder"],"count":1,"percentage":11.11},
+  {"gem_name":"coffee-rails","repositories":["winston/cactus_app"],"count":1,"percentage":11.11},
+  {"gem_name":"rdiscount","repositories":["winston/soloistrc_builder"],"count":1,"percentage":11.11},
+  {"gem_name":"haml-rails","repositories":["winston/cactus_app"],"count":1,"percentage":11.11},
+  {"gem_name":"jquery-rails","repositories":["winston/cactus_app"],"count":1,"percentage":11.11},
+  {"gem_name":"foreman","repositories":["winston/soloistrc_builder"],"count":1,"percentage":11.11}
+]

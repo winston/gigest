@@ -22,11 +22,11 @@ describe Gigest::Analytics do
   end
 
   describe "#process_for" do
-    let(:account_details)           { {name: "naruto", company: "konoha"} }
-    let(:repositories)              { [repo1, repo2] }
-    let(:repositories_with_gemfile) { [repo1] }
-    let(:repo1) { double(:repo1, has_gemfile?: true)  }
-    let(:repo2) { double(:repo2, has_gemfile?: false) }
+    let(:account_details) { {name: "naruto", company: "konoha"} }
+    let(:repositories) { [repo1, repo2] }
+    let(:expected)     { [repo2] }
+    let(:repo1) { double(:repo1, has_gemfile?: false) }
+    let(:repo2) { double(:repo2, has_gemfile?: true) }
 
     before do
       Gigest::GithubConnection.any_instance.stub(:details_for)      { account_details }
@@ -42,19 +42,75 @@ describe Gigest::Analytics do
       expect(analytics.repositories).to eq(repositories)
     end
 
-    it "inits repositories with gemfile" do
-      expect(analytics.repositories_with_gemfile).to eq(repositories_with_gemfile)
+    it "inits repositories_with_gemfile" do
+      expect(analytics.repositories_with_gemfile).to eq(expected)
     end
   end
 
-  describe "#summary", :vcr do
-    let(:expected) { JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "summary.json"))) }
+  describe "#source_repositories" do
+    let(:repositories) { [repo1, repo2] }
+    let(:expected)     { [repo1] }
+    let(:repo1) { double(:repo1, fork?: false) }
+    let(:repo2) { double(:repo2, fork?: true) }
 
+    before { analytics.stub(:repositories) { repositories } }
+
+    it { expect(analytics.source_repositories).to eq expected }
+  end
+
+  describe "#source_repositories_with_gemfile" do
+    let(:repositories) { [repo1, repo2] }
+    let(:expected)     { [repo2] }
+    let(:repo1) { double(:repo1, has_gemfile?: false) }
+    let(:repo2) { double(:repo2, has_gemfile?: true) }
+
+    before { analytics.stub(:source_repositories) { repositories } }
+
+    it { expect(analytics.source_repositories_with_gemfile).to eq expected }
+  end
+
+  describe "#fork_repositories" do
+    let(:repositories) { [repo1, repo2] }
+    let(:expected)     { [repo2] }
+    let(:repo1) { double(:repo1, fork?: false) }
+    let(:repo2) { double(:repo2, fork?: true) }
+
+    before { analytics.stub(:repositories) { repositories } }
+
+    it { expect(analytics.fork_repositories).to eq expected }
+  end
+
+  describe "#fork_repositories_with_gemfile" do
+    let(:repositories) { [repo1, repo2] }
+    let(:expected)     { [repo2] }
+    let(:repo1) { double(:repo1, has_gemfile?: false) }
+    let(:repo2) { double(:repo2, has_gemfile?: true) }
+
+    before { analytics.stub(:fork_repositories) { repositories } }
+
+    it { expect(analytics.fork_repositories_with_gemfile).to eq expected }
+  end
+
+  describe "#summary", :vcr do
     context "when repositories exist" do
       before { analytics.process_for("winston") }
 
-      it "generates a summary report" do
-        expect(analytics.summary).to eq(expected)
+      context "for all repositories" do
+        let(:expected) { JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "summary_all.json"))) }
+
+        it { expect(analytics.summary).to eq(expected) }
+      end
+
+      context "for source repositories only" do
+        let(:expected) { JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "summary_source.json"))) }
+
+        it { expect(analytics.summary(:source)).to eq(expected) }
+      end
+
+      context "for fork repositories only" do
+        let(:expected) { JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "summary_fork.json"))) }
+
+        it { expect(analytics.summary(:fork)).to eq(expected) }
       end
     end
 
@@ -67,16 +123,30 @@ describe Gigest::Analytics do
 
   describe "#statistics", :vcr do
     let(:expected) do
-      contents = JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", "statistics.json")))
-      # stringify keys
+      contents = JSON.parse(File.read(File.join(Dir.pwd, "spec", "fixtures", file)))
+      # symbolize keys
       contents.map { |row| row.inject({}) { |memo,(k,v)| memo[k.to_sym] = v; memo } }
     end
 
     context "when repositories exist" do
       before { analytics.process_for("winston") }
 
-      it "generates a summary report" do
-        expect(analytics.statistics).to eq(expected)
+      context "for all repositories" do
+        let(:file) { "statistics_all.json" }
+
+        it { expect(analytics.statistics).to eq(expected) }
+      end
+
+      context "for source repositories only" do
+        let(:file) { "statistics_source.json" }
+
+        it { expect(analytics.statistics(:source)).to eq(expected) }
+      end
+
+      context "for fork repositories only" do
+        let(:file) { "statistics_fork.json" }
+
+        it { expect(analytics.statistics(:fork)).to eq(expected) }
       end
     end
 
