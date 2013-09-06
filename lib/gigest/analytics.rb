@@ -15,16 +15,16 @@ module Gigest
       @repositories    = @connection.repositories_for(account)
     end
 
-    def repositories
+    def all_repositories
       @repositories
     end
 
-    def repositories_with_gemfile
-      repositories.select(&:has_gemfile?)
+    def all_repositories_with_gemfile
+      all_repositories.select(&:has_gemfile?)
     end
 
     def source_repositories
-      repositories.reject(&:fork?)
+      all_repositories.reject(&:fork?)
     end
 
     def source_repositories_with_gemfile
@@ -32,7 +32,7 @@ module Gigest
     end
 
     def fork_repositories
-      repositories.select(&:fork?)
+      all_repositories.select(&:fork?)
     end
 
     def fork_repositories_with_gemfile
@@ -45,8 +45,8 @@ module Gigest
     #   gem1: [repo1, repo2],
     #   gem2: [repo1, repo2]
     # }
-    def summary(type=nil)
-      raise "Please specify GitHub account to analyse by invoking #process_for(account) method first!" if repositories.nil?
+    def summary(type=:all)
+      raise "Please specify GitHub account to analyse by invoking #process_for(account) method first!" if all_repositories.nil?
 
       get_repositories(type).reduce({}) do |summary, repository|
         repository.gems.each do |gem|
@@ -63,8 +63,8 @@ module Gigest
     #   {gem_name: gem1, repositories: ["repo1", "repo2"], count: 2, percentage: 100.0},
     #   {gem_name: gem2, repositories: ["repo1"], count: 1, percentage: 50.0}
     # ]
-    def statistics(type=nil)
-      raise "Please specify GitHub account to analyse by invoking #process_for(account) method first!" if repositories.nil?
+    def statistics(type=:all)
+      raise "Please specify GitHub account to analyse by invoking #process_for(account) method first!" if all_repositories.nil?
 
       repos_summary   = summary(type)
       repo_type_count = get_repositories(type).count
@@ -83,7 +83,7 @@ module Gigest
     private
 
     def get_repositories(type)
-      type.nil? ? repositories_with_gemfile : send("#{type}_repositories_with_gemfile")
+      send("#{type}_repositories_with_gemfile")
     end
 
     def percentage(numerator, denominator)

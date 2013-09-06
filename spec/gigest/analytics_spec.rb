@@ -39,11 +39,11 @@ describe Gigest::Analytics do
     end
 
     it "inits repositories" do
-      expect(analytics.repositories).to eq(repositories)
+      expect(analytics.all_repositories).to eq(repositories)
     end
 
     it "inits repositories_with_gemfile" do
-      expect(analytics.repositories_with_gemfile).to eq(expected)
+      expect(analytics.all_repositories_with_gemfile).to eq(expected)
     end
   end
 
@@ -53,7 +53,7 @@ describe Gigest::Analytics do
     let(:repo1) { double(:repo1, fork?: false) }
     let(:repo2) { double(:repo2, fork?: true) }
 
-    before { analytics.stub(:repositories) { repositories } }
+    before { analytics.stub(:all_repositories) { repositories } }
 
     it { expect(analytics.source_repositories).to eq expected }
   end
@@ -75,7 +75,7 @@ describe Gigest::Analytics do
     let(:repo1) { double(:repo1, fork?: false) }
     let(:repo2) { double(:repo2, fork?: true) }
 
-    before { analytics.stub(:repositories) { repositories } }
+    before { analytics.stub(:all_repositories) { repositories } }
 
     it { expect(analytics.fork_repositories).to eq expected }
   end
