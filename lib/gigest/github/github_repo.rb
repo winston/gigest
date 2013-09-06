@@ -9,6 +9,14 @@ module Gigest
       @repository.full_name
     end
 
+    def private?
+      @repository.private
+    end
+
+    def fork?
+      @repository.fork
+    end
+
     def has_gemfile?
       !@gemfile.nil?
     end

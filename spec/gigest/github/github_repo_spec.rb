@@ -19,6 +19,30 @@ describe Gigest::GithubRepo do
 		end
 	end
 
+	describe "#private?" do
+		context "when repo is private" do
+			before { github_repo.stub(:private) { true } }
+			it { expect(gigest_repo.private?).to be_true }
+		end
+
+		context "when repo is private" do
+			before { github_repo.stub(:private) { false } }
+			it { expect(gigest_repo.private?).to be_false }
+		end
+	end
+
+	describe "#fork?" do
+		context "when repo is fork" do
+			before { github_repo.stub(:fork) { true } }
+			it { expect(gigest_repo.fork?).to be_true }
+		end
+
+		context "when repo is fork" do
+			before { github_repo.stub(:fork) { false } }
+			it { expect(gigest_repo.fork?).to be_false }
+		end
+	end
+
 	describe "#gems" do
 		context "gemfile is nil" do
 			let(:gemfile) { nil }
